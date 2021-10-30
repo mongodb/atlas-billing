@@ -1,0 +1,22 @@
+[
+    {
+        "name": "getData",
+        "private": false
+    },
+    {
+        "name": "getall",
+        "private": false
+    },
+    {
+        "name": "getdata",
+        "private": false
+    },
+    {
+        "name": "processdata",
+        "private": false
+    },
+    {
+        "name": "processall",
+        "private": false
+    }
+]

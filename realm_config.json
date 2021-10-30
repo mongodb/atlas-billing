@@ -1,0 +1,8 @@
+{
+    "config_version": 20210101,
+    "app_id": "billing-toksl",
+    "name": "billing",
+    "location": "US-VA",
+    "deployment_model": "LOCAL",
+    "environment": "production"
+}

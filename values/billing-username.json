@@ -1,0 +1,5 @@
+{
+    "name": "billing-username",
+    "value": "billing-usernameSecret",
+    "from_secret": true
+}

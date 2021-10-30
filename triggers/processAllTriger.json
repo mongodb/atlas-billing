@@ -1,0 +1,9 @@
+{
+    "name": "processAllTrigger",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "30 6/24 * * *"
+    },
+    "function_name": "processall",
+    "disabled": false
+}

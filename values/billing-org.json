@@ -1,0 +1,5 @@
+{
+    "name": "billing-org",
+    "value": "billing-orgSecret",
+    "from_secret": true
+}
