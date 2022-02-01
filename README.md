@@ -9,7 +9,7 @@ This project enables you to build your own automated MongoDB Atlas Billing Dashb
 <img width="762" alt="Sample Billing Dashboard" src="dashboard-example.png">
 
 # Video
-[![Atlas Billing video](http://i3.ytimg.com/vi/1sD0MBuGecQ/hqdefault.jpg)](https://www.youtube.com/watch?v=1sD0MBuGecQ)
+[![Atlas Billing video](http://i3.ytimg.com/vi/1sD0MBuGecQ/hqdefault.jpg)](https://www.youtube.com/watch?v=g-f0wkulvwU)
 
 # Setup
 Setting up this solution involves a number of steps in the Atlas web portal,
