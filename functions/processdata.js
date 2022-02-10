@@ -121,6 +121,10 @@ processAll = async function(org, date)
             then: 'audit'
           },
           {
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'ATLAS_SUPPORT' }},
+            then: 'support'
+          },
+          {
             case: { $regexMatch: { input: '$lineItems.sku', regex: 'FREE_SUPPORT' }},
             then: 'free support'
           },
@@ -130,7 +134,11 @@ processAll = async function(org, date)
           },
           {
             case: { $regexMatch: { input: '$lineItems.sku', regex: 'STITCH' }},
-            then: 'stitch'
+            then: 'realm'
+          },
+          {
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'SERVERLESS' }},
+            then: 'serverless'
           },
           {
             case: { $regexMatch: { input: '$lineItems.sku', regex: 'SECURITY' }},
