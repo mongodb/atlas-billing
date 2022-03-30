@@ -122,9 +122,7 @@ For example, you can update `getall` as follow to add another organisation:
 
 ```
 exports = async function(){
-  console.log(`refreshInvoiceData: ` + (context.values.get(`refreshInvoiceData`)));
-  console.log(`refreshOrgData: ` + (context.values.get(`refreshOrgData`)));
-  console.log(`refreshProjectData: ` + (context.values.get(`refreshProjectData`)));
+  
   const promises = [
    
     context.functions.execute("getdata_latest", context.values.get("billing-org"), context.values.get("billing-username"), context.values.get("billing-password"))

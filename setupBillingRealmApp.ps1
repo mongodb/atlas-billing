@@ -51,7 +51,7 @@ $config="{
     `"version`": 1
 }"
 
-Write-Output "$config" > ./data_sources/mongodb-atlas/config.json
+Write-Output "$config" | set-content ./data_sources/mongodb-atlas/config.json
 
 # Import the Realm app
 realm-cli login --api-key="$publicKeyProject" --private-api-key="$privateKeyProject"
