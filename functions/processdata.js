@@ -84,7 +84,7 @@ processAll = async function(org, date)
         default: 'n/a'
       }
     },
-    instance: { '$ifNull': [{ '$arrayElemAt': [ { '$split': ['$lineItems.sku', '_INSTANCE_'] }, 1 ] }, 'non-instance']},
+    instance: { '$ifNull': [{ '$arrayElemAt': [ { '$split': ['$lineItems.sku', ' '] }, 1 ] }, 'non-instance']},
     category: {
       '$switch': {
         branches: [
