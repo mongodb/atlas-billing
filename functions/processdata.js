@@ -133,7 +133,7 @@ processAll = async function(org, date)
             then: 'charts'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'STITCH' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'REALM' }},
             then: 'app services'
           },
           {
