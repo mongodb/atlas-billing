@@ -1,6 +1,6 @@
 exports = async function(){
  const promises = [
-   //TO BE UPDATED IF YOU HAVE SEVERAL ORGANISATION
+   //If you want to include several orgs in the one dashboard, you'll need to call getdata_latest for each one, with appropriate org IDs and API keys.
    
     context.functions.execute("getdata_latest", context.values.get("billing-org"), context.values.get("billing-username"), context.values.get("billing-password"))
       .catch(err => { return err; }),

@@ -5,8 +5,8 @@ exports = async function(org, username, password){
     getOrg(org, username, password),
     getProjects(org, username, password)
   ];
-  await Promise.all(promises);
-  return {"org": org, "status": "success!"};
+  const results = await Promise.all(promises.map(p => p.catch(e => e.toString())));
+  return {"org": org, "status": results};
 };
 
 getInvoices = async function(org, username, password)
@@ -27,7 +27,7 @@ getInvoices = async function(org, username, password)
   const response = await context.http.get(args);
   const body = JSON.parse(response.body.text());
   if (response.statusCode != 200) throw {"error": body.detail, "fn": "getInvoices", "statusCode": response.statusCode};
-
+ 
   const collection = context.services.get(`mongodb-atlas`).db(`billing`).collection(`billingdata`);
   const invoicedata = await collection.find({}, {"_id": 0, "id": 1, "updated": 1}).sort({"updated":-1}).toArray();
 
@@ -40,7 +40,7 @@ getInvoices = async function(org, username, password)
       promises.push(getInvoice(org, username, password, result.id));
     }
   });
-  return Promise.all(promises);
+  return Promise.all(promises.map(p => p.catch(e => e.toString())));
 };
 
 getInvoice = async function(org, username, password, invoice)
@@ -58,6 +58,7 @@ getInvoice = async function(org, username, password, invoice)
   
   const response = await context.http.get(args);
   const body = JSON.parse(response.body.text());
+  body.linkedInvoices = null; // Potentially large, and not needed.
   if (response.statusCode != 200) throw {"error": body.detail, "fn": "getInvoice", "statusCode": response.statusCode};
   return collection.replaceOne({"id": body.id}, body, {"upsert": true});
 };
@@ -110,5 +111,5 @@ getProjects = async function(org, username, password)
   body.results.forEach(result => {
     promises.push(collection.replaceOne({"_id": result.id}, {"_id": result.id, "name": result.name}, {"upsert": true}));
   });
-  return Promise.all(promises);
+  return Promise.all(promises.map(p => p.catch(e => e.toString())));
 };
