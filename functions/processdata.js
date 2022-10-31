@@ -84,16 +84,16 @@ processAll = async function(org, date)
         default: 'n/a'
       }
     },
-    instance: { '$ifNull': [{ '$arrayElemAt': [ { '$split': ['$lineItems.sku', ' '] }, 1 ] }, 'non-instance']},
+    instance: { '$ifNull': [{ '$arrayElemAt': [ { '$split': ['$lineItems.sku', '_INSTANCE_'] }, 1 ] }, 'non-instance']},
     category: {
       '$switch': {
         branches: [
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: "Instance" }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: "_INSTANCE" }},
             then: 'instances'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Backup' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'BACKUP' }},
             then: 'backup'
           },
           {
@@ -101,7 +101,7 @@ processAll = async function(org, date)
             then: 'backup'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Transfer' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'DATA_TRANSFER' }},
             then: 'data xfer'
           },
           {
@@ -109,7 +109,7 @@ processAll = async function(org, date)
             then: 'storage'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'BI Connector' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'BI_CONNECTOR' }},
             then: 'bi connector'
           },
           {
@@ -117,7 +117,7 @@ processAll = async function(org, date)
             then: 'data lake'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Auditing' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'AUDITING' }},
             then: 'audit'
           },
           {
@@ -129,23 +129,23 @@ processAll = async function(org, date)
             then: 'free support'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Charts' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'CHARTS' }},
             then: 'charts'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Compute' }},
-            then: 'realm'
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'REALM' }},
+            then: 'app services'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Serverless' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'SERVERLESS' }},
             then: 'serverless'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Security' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'SECURITY' }},
             then: 'security'
           },
           {
-            case: { $regexMatch: { input: '$lineItems.sku', regex: 'Endpoint' }},
+            case: { $regexMatch: { input: '$lineItems.sku', regex: 'PRIVATE_ENDPOINT' }},
             then: 'private endpoint'
           },
         ],
