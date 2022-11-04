@@ -20,11 +20,11 @@ open MongoDB Charts to import the dashboard.
 1. Sign into [MongoDB Atlas](https://cloud.mongodb.com)
 2. Create a new Project within the Atlas Organization which you wish to analyze
 billing data for. Give the project a descriptive name such as `Atlas Billing`. 
-3. Deploy a new cluster in this project to store your billing data. The free
-tier (M0) should be sufficient to get started. Give your cluster a descriptive 
-name such as `billing-data`.
+3. Deploy a new cluster in this project to store your billing data. If you have
+a lot of usage, we recommend using an M10 cluster or higher to store and process
+your billing data. Give your cluster a descriptive name such as `billing-data`.
 4. Create an API Key for the project. This will be used to programmatically
-deploy the Realm app:
+deploy the App Services app:
     * Ensure that `Atlas Billing` is your active project
     * Click **Access Manager** on the top bar, and then **Project Access**
     * Click **Create API Key**
@@ -61,12 +61,12 @@ present:
     
     *Using Powershell*:
     ```
-    ./setupBillingRealmApp.ps1
+    ./setupBillingAppService.ps1
     ```
 
     *Using bash*:
     ```
-    ./setupBillingRealmApp.sh
+    ./setupBillingAppService.sh
     ```
 5. When prompted, enter the public and private API keys for your Organization
 and Project, as well as the name of your cluster.
@@ -77,31 +77,26 @@ Note that the app contains a trigger which will load new data into the cluster d
 1. Sign into [MongoDB Atlas](https://cloud.mongodb.com) and select your `Atlas
 Billing` project
 2. Click the **Charts** tab on the top nav, and activate Charts if you haven't done so already
-3. Click the **Data Sources** option on the left nav, and choose 
-**Add Data Source**
-4. Select your `billing-data` cluster, and add data sources for all collections
-in the `billing` database, followed by **Finish**
-5. Click the **Dashboards** option on the left nav
-6. Find the **Add Dashboard** button and click the down arrow, and then select
+3. Find the **Add Dashboard** button and click the down arrow, and then select
 **Import Dashboard**
-7. Choose the `charts_billing_template.charts` file from this repo, click **Next**
+4. Choose the `charts_billing_template.charts` file from this repo, click **Next**
 and then **Save**
-8. Open the imported dashboard, and start exploring your Atlas usage and billing data! You
+5. Open the imported dashboard, and start exploring your Atlas usage and billing data! You
 may want to try changing the dashboard filters, editing existing charts or adding new charts.
 
 
 # Solution Details
-The Realm app in this repo contains one function, one trigger and some values & secrets. You
-can view and update the deployed app by clicking the **Realm** tab on the top Atlas nav.
+The App Services app in this repo contains one function, one trigger and some values & secrets. You
+can view and update the deployed app by clicking the **App Services** tab on the top Atlas nav.
 
 ### Functions
-`getdata`: this function retrieves all invoice data related to a specific organization.
+`getAll`: this function calls the getdata function for each organization. It can be updated to implement cross-organization billing.
 
-`processdata`: this function updates data and has additional categorization of the data to enhance the output in MongoDB Charts.
+`processAll`: this function calls the processdata function for each organization. It can be updated to implement cross-organization billing.
 
-`getall`: this function calls the getdata function for each organization. It can be updated to implement cross-organization billing.
+`getOrgData`: this function retrieves all invoice data related to a specific organization.
 
-`processall`: this function calls the processdata function for each organization. It can be updated to implement cross-organization billing.
+`processData`: this function updates data and has additional categorization of the data to enhance the output in MongoDB Charts.
 
 ### Values & Secrets
 `billing-org`: maps to the Org Id we want to gather Billing data from. `Maps to billing-orgSecret`.
@@ -111,9 +106,9 @@ can view and update the deployed app by clicking the **Realm** tab on the top At
 `billing-password`: maps to the Private API key for the Org we want to gather Billing data from. Maps to `billing-passwordSecret`.
 
 ### Triggers
-`getAllTrigger`: runs at 7am GMT each morning to retrieve the billing data using the `getall` function above.
+`getAllTrigger`: runs at 7am GMT each morning to retrieve the billing data using the `getAll` function above.
 
-`processAllTrigger`: runs at 7:30am GMT each morning to update the billing data using the `processall` function above.
+`processAllTrigger`: runs at 7:30am GMT each morning to update the billing data using the `processAll` function above.
  
 # Enhancements
 Additional enhancements are possible such as:
