@@ -12,7 +12,7 @@ echo "
 "
 
 
-echo "This script configures a MongoDB Realm app which extracts data from the Atlas Billing API"
+echo "This script configures a MongoDB App Services app which extracts data from the Atlas Billing API"
 echo "and writes it to an Atlas Cluster"
 echo 
 echo "Before you run this script, make sure you have:"
@@ -33,7 +33,7 @@ echo "Enter the PUBLIC Key for your ORGANIZATION level API Key:"
 read publicKeyOrg
 echo "Enter the PRIVATE Key for your ORGANIZATION level API Key:"
 read privateKeyOrg
-echo "Enter the name of the Atlas Cluster that will store the billing data:"
+echo "Enter the name of the running Atlas cluster that will store the billing data:"
 read clusterName
 
 echo "Thanks....."
@@ -41,7 +41,7 @@ echo "Thanks....."
 # Obtain Organization ID and Cluster info from Atlas API
 orgID=$(curl -s https://cloud.mongodb.com/api/atlas/v1.0 --digest -u $publicKeyOrg:$privateKeyOrg | sed -e 's/[{}]/''/g' | awk -v RS=',"' -F/ '/^href/ {print $8}')
 
-# Rewrite the Realm Service with the specified cluster name
+# Rewrite the App Service with the specified cluster name
 config='{
     "name": "mongodb-atlas",
     "type": "mongodb-atlas",
@@ -54,28 +54,27 @@ config='{
 }'
 echo "$config" > ./data_sources/mongodb-atlas/config.json
 
-# Import the Realm app
+# Import the App Services app
 realm-cli login --api-key="$publicKeyProject" --private-api-key="$privateKeyProject"
 realm-cli import --yes 
 
-# Write secrets to Realm app
+# Write secrets to App Services app
 realm-cli secrets create -n billing-orgSecret -v $orgID
 realm-cli secrets create -n billing-usernameSecret -v $publicKeyOrg
 realm-cli secrets create -n billing-passwordSecret -v $privateKeyOrg
 realm-cli push --remote "billing" -y
 
 # Run functions to retrieve billing data for the first time
-echo "Please wait a few seconds before we run the getall function ..."
+echo "Please wait a few seconds before we run the getAll function ..."
 
 sleep 30
-realm-cli function run --name "getall"
+realm-cli function run --name "getAll"
 
-echo "Please wait a few seconds before we run the processall function ..."
-realm-cli function run --name "processall"
+echo "Please wait a few seconds before we run the processAll function ..."
+realm-cli function run --name "processAll"
 
 # Next Steps
 echo "Setup Complete! Please log into Atlas and verify that data has been loaded into the cluster."
 echo "To visualize the billing data on a dashboard:"
 echo "1. Activate Charts in your Atlas project"
-echo "2. Add Data Sources for your billing collections"
-echo "3. Import the dashboard from the included file 'charts_billing_template.charts'"
+echo "2. Import the dashboard from the included file 'charts_billing_template.charts'"

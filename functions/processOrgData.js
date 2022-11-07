@@ -49,14 +49,6 @@ processAll = async function(org, date)
   // but without spilling to disk this sort stage falls over on the larger result sets
   // pipeline.push({ "$sort": { "lineItems.startDate": 1 }});
 
-  pipeline.push({ "$lookup": {
-    "from": "projectdata",
-    "localField": "lineItems.groupId",
-    "foreignField": "_id",
-    "as": "projectdata"
-  }});
-  pipeline.push({ "$unwind": { "path": "$projectdata", "preserveNullAndEmptyArrays": true }});
-
   pipeline.push({ "$project": {
     "_id": 0,
     "org": { "id": "$orgId", "name": { "$ifNull": ["$orgdata.name", "$orgId" ]} },
@@ -156,7 +148,7 @@ processAll = async function(org, date)
   
   pipeline.push({ "$merge": { "into": "details" }});
 
-  return collection.aggregate(pipeline).toArray();
+  return collection.aggregate(pipeline, { allowDiskUse: true}).toArray();
 };
 
 verifyData = async function(org)

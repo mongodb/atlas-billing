@@ -1,22 +1,18 @@
 [
     {
-        "name": "getData",
+        "name": "getOrgData",
         "private": false
     },
     {
-        "name": "getall",
+        "name": "getAll",
         "private": false
     },
     {
-        "name": "getdata",
+        "name": "processOrgData",
         "private": false
     },
     {
-        "name": "processdata",
-        "private": false
-    },
-    {
-        "name": "processall",
+        "name": "processAll",
         "private": false
     }
 ]

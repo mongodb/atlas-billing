@@ -12,7 +12,7 @@ Write-Output "
  *                  |___|                                    |___|               
  */
 "
-Write-Output "This script configures a MongoDB Realm app which extracts data from the Atlas Billing API"
+Write-Output "This script configures a MongoDB App Services app which extracts data from the Atlas Billing API"
 Write-Output "and writes it to an Atlas Cluster`n"
 
 Write-Output "Before you run this script, make sure you have:"
@@ -28,7 +28,7 @@ $publicKeyProject = Read-Host "Enter the PUBLIC Key for your PROJECT level API K
 $privateKeyProject = Read-Host "Enter the PRIVATE Key for your PROJECT level API Key"
 $publicKeyOrg = Read-Host "Enter the PUBLIC Key for your ORGANIZATION level API Key"
 $privateKeyOrg = Read-Host "Enter the PRIVATE Key for your ORGANIZATION level API Key"
-$clusterName= Read-Host "Enter the name of the Atlas Cluster that will store the billing data"
+$clusterName= Read-Host "Enter the name of the running Atlas cluster that will store the billing data"
 Write-Output "Thanks....."
 
 # Obtain Organization ID and Cluster info from Atlas API
@@ -39,7 +39,7 @@ $json = (ConvertFrom-Json $resp.Content).results[0]
 $groupId = $json.groupId
 $orgID = $json.orgId
 
-# Rewrite the Realm Service with the specified cluster name
+# Rewrite the App Service with the specified cluster name
 $config="{
     `"name`": `"mongodb-atlas`",
     `"type`": `"mongodb-atlas`",
@@ -53,26 +53,25 @@ $config="{
 
 Write-Output "$config" | set-content ./data_sources/mongodb-atlas/config.json
 
-# Import the Realm app
+# Import the App Services app
 realm-cli login --api-key="$publicKeyProject" --private-api-key="$privateKeyProject"
 realm-cli import --yes
 
-# Write secrets to Realm app
+# Write secrets to App Services app
 realm-cli secrets create -n billing-orgSecret -v $orgID
 realm-cli secrets create -n billing-usernameSecret -v $publicKeyOrg
 realm-cli secrets create -n billing-passwordSecret -v $privateKeyOrg
 realm-cli push --remote "billing" -y
 
 # Run functions to retrieve billing data for the first time
-Write-Output "Please wait a few seconds before we run the getall function ..."
+Write-Output "Please wait a few seconds before we run the getAll function ..."
 Start-Sleep 30
-realm-cli function run --name "getall"
-Write-Output "Please wait a few seconds before we run the processall function ..."
-realm-cli function run --name "processall"
+realm-cli function run --name "getAll"
+Write-Output "Please wait a few seconds before we run the processAll function ..."
+realm-cli function run --name "processAll"
 
 # Next Steps
 Write-Output "Setup Complete! Please log into Atlas and verify that data has been loaded into the cluster."
 Write-Output "To visualize the billing data on a dashboard:"
 Write-Output "1. Activate Charts in your Atlas project"
-Write-Output "2. Add Data Sources for your billing collections"
-Write-Output "3. Import the dashboard from the included file 'charts_billing_template.charts'"
+Write-Output "2. Import the dashboard from the included file 'charts_billing_template.charts'"
