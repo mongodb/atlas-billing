@@ -4,7 +4,7 @@
 
 This project enables you to build your own automated MongoDB Atlas Billing Dashboard. It includes a MongoDB Realm application which regularly imports data from the Atlas Billing API into your own Atlas cluster. It also includes a MongoDB Charts dashboard with visualizations of your billing data, which you can use as-is or extend to give you detailed insights into your Atlas usage.
 
-*Jump to [setup instructions](#setup).* 
+*Jump to [setup instructions](#setup).*
 
 <img width="762" alt="Sample Billing Dashboard" src="dashboard-example.png">
 
@@ -22,7 +22,7 @@ open MongoDB Charts to import the dashboard.
 billing data for. Give the project a descriptive name such as `Atlas Billing`. 
 3. Deploy a new cluster in this project to store your billing data. If you have
 a lot of usage, we recommend using an M10 cluster or higher to store and process
-your billing data. Give your cluster a descriptive name such as `billing-data`.
+your billing data. Give your cluster a descriptive name such as `BillingData`.
 4. Create an API Key for the project. This will be used to programmatically
 deploy the App Services app:
     * Ensure that `Atlas Billing` is your active project
@@ -79,9 +79,13 @@ Billing` project
 2. Click the **Charts** tab on the top nav, and activate Charts if you haven't done so already
 3. Find the **Add Dashboard** button and click the down arrow, and then select
 **Import Dashboard**
-4. Choose the `charts_billing_template.charts` file from this repo, click **Next**
-and then **Save**
-5. Open the imported dashboard, and start exploring your Atlas usage and billing data! You
+4. Choose the `charts_billing_template.charts` file from this repo, click **Next**.
+5. If the **"Data source at destination"** says **"Connect later"**, click on the edit button next to your data source.
+   1. Select **Connect now**
+   2. Choose the deployment, collection and database that you created in the previous steps
+   3. Click **Save** underneath the dropdown
+6. Click the green **Save** button
+7. Open the imported dashboard, and start exploring your Atlas usage and billing data! You
 may want to try changing the dashboard filters, editing existing charts or adding new charts.
 
 
@@ -141,5 +145,4 @@ exports = async function(){
 * [Tracking and Managing Your Spend on MongoDB Atlas](https://www.youtube.com/watch?v=qP-n8wnwZzI)
 * [Building a MongoDB Billing Dashboard](https://www.mongodb.com/blog/post/building-a-mongodb-billing-dashboard--part-2)
 * [MongoDB University: Introduction to MongoDB Charts](https://university.mongodb.com/courses/A131/about)
-
 
