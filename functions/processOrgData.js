@@ -94,7 +94,7 @@ processAll = async function(org, date)
           },
           {
             case: { $regexMatch: { input: '$lineItems.sku', regex: 'DATA_TRANSFER' }},
-            then: 'data xfer'
+            then: 'data Transfer'
           },
           {
             case: { $regexMatch: { input: '$lineItems.sku', regex: 'STORAGE' }},
