@@ -58,6 +58,16 @@ getInvoice = async function(org, username, password, invoice)
   const response = await context.http.get(args);
   const body = JSON.parse(response.body.text());
   body.linkedInvoices = null; // Potentially large, and not needed.
+  
+  // Remove zero dollar line items to save space
+  const billedLineItems = [];
+  body.lineItems.forEach(li => {
+    if (li.totalPriceCents > 0) {
+      billedLineItems.push(li);
+    }
+  });
+  body.lineItems = billedLineItems;
+  
   if (response.statusCode != 200) throw {"error": body.detail, "fn": "getInvoice", "statusCode": response.statusCode};
   return collection.replaceOne({"id": body.id}, body, {"upsert": true});
 };
