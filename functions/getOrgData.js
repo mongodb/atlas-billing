@@ -28,13 +28,14 @@ getInvoices = async function(org, username, password)
   if (response.statusCode != 200) throw {"error": body.detail, "fn": "getInvoices", "statusCode": response.statusCode};
  
   const collection = context.services.get(`mongodb-atlas`).db(`billing`).collection(`billingdata`);
-  const invoicedata = await collection.find({}, {"_id": 0, "id": 1, "updated": 1}).sort({"updated":-1}).toArray();
+  const idList = body.results.map(item => item.id );
+  const invoicedata = await collection.find({ _id: { "$in": idList}}, {"_id": 1, "updated": 1}).sort({"updated":-1}).toArray();
 
   let promises = [];
   body.results.forEach(result => {
-    const invoice = invoicedata.find(elem => elem.id === result.id);
+    const invoice = invoicedata.find(elem => elem._id === result.id);
      
-    if (result.statusName == "PENDING" || invoice === undefined || (invoicedata && result.updated >= invoicedata[0].updated)) {
+    if (result.statusName == "PENDING" || invoice === undefined || (invoicedata[0] && result.updated >= invoicedata[0].updated)) {
   
       promises.push(getInvoice(org, username, password, result.id));
     }
@@ -42,7 +43,7 @@ getInvoices = async function(org, username, password)
   return Promise.all(promises.map(p => p.catch(e => e.toString())));
 };
 
-getInvoice = async function(org, username, password, invoice)
+getInvoice = async function(org, username, password, invoiceId)
 { 
   const collection = context.services.get(`mongodb-atlas`).db(`billing`).collection(`billingdata`);
 
@@ -52,7 +53,7 @@ getInvoice = async function(org, username, password, invoice)
     "username": username,
     "password": password,
     "digestAuth": true,
-    "path": `/api/atlas/v1.0/orgs/${org}/invoices/${invoice}`
+    "path": `/api/atlas/v1.0/orgs/${org}/invoices/${invoiceId}`
   };
   
   const response = await context.http.get(args);
@@ -67,9 +68,11 @@ getInvoice = async function(org, username, password, invoice)
     }
   });
   body.lineItems = billedLineItems;
+  body._id = body.id;
+  delete body.id;
   
   if (response.statusCode != 200) throw {"error": body.detail, "fn": "getInvoice", "statusCode": response.statusCode};
-  return collection.replaceOne({"id": body.id}, body, {"upsert": true});
+  return collection.replaceOne({"_id": body._id}, body, {"upsert": true});
 };
 
 getOrg = async function(org, username, password)
