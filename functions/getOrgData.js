@@ -33,7 +33,7 @@ getInvoices = async function(org, username, password)
 
   let promises = [];
   body.results.forEach(result => {
-    const invoice = invoicedata.find(elem => elem._id === result.id);
+    const invoice = invoicedata.find(elem => elem._id.toString() === result.id);
      
     if (result.statusName == "PENDING" || invoice === undefined || (invoicedata[0] && result.updated >= invoicedata[0].updated)) {
   
@@ -68,7 +68,7 @@ getInvoice = async function(org, username, password, invoiceId)
     }
   });
   body.lineItems = billedLineItems;
-  body._id = body.id;
+  body._id = new BSON.ObjectId(body.id);
   delete body.id;
   
   if (response.statusCode != 200) throw {"error": body.detail, "fn": "getInvoice", "statusCode": response.statusCode};
