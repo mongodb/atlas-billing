@@ -21,10 +21,11 @@ processAll = async function(org, date)
   
   // quick filter to avoid processing older invoices
   // (anything where the endData is more recent than
-  // a month prior to the last date we've processed)
+  // a month prior to the last date we've processed).
+  // We filter on _id ObjectIds so we can use the default index.
   if (date instanceof Date) {
     const startfrom = new Date(date - 1000 * 3600 * 24 * 31);
-    pipeline.push({ "$match": { "endDate": { "$gte": JSON.stringify(startfrom) }}});
+    pipeline.push({ "$match": { "_id": { "$gte": objectIdFromTimestamp(startfrom) }}});
   }
 
   pipeline.push({ "$lookup": {
@@ -175,4 +176,19 @@ countDst = async function(org)
 {
   const collection = context.services.get(`mongodb-atlas`).db(`billing`).collection(`details`);
   return collection.count({ "org.id": org });
+};
+
+objectIdFromTimestamp = function(timestamp) {
+  /* Convert string date to Date object (otherwise assume timestamp is a date) */
+  if (typeof(timestamp) == 'string') {
+      timestamp = new Date(timestamp);
+  }
+
+  /* Convert date object to hex seconds since Unix epoch */
+  var hexSeconds = Math.floor(timestamp/1000).toString(16);
+
+  /* Create an ObjectId with that hex timestamp */
+  var constructedObjectId = BSON.ObjectId(hexSeconds + "0000000000000000");
+
+  return constructedObjectId
 };
