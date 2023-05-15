@@ -31,14 +31,19 @@ getInvoices = async function(org, username, password)
   const idList = body.results.map(item => item.id );
   const invoicedata = await collection.find({ _id: { "$in": idList}}, {"_id": 1, "updated": 1}).sort({"updated":-1}).toArray();
  
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
   for (const result of  body.results) {
-    const invoice = invoicedata.find(elem => elem._id.toString() === result.id);
+    if (new Date(result.created) > oneYearAgo) {
+      const invoice = invoicedata.find(elem => elem._id.toString() === result.id);
      
-    if (result.statusName == "PENDING" || invoice === undefined || (invoicedata[0] && result.updated >= invoicedata[0].updated)) {
-      try {
-        await getInvoice(org, username, password, result.id);
-      } catch (e) {
-        return e.toString();
+      if (result.statusName == "PENDING" || invoice === undefined || (invoicedata[0] && result.updated >= invoicedata[0].updated)) {
+        try {
+          await getInvoice(org, username, password, result.id);
+        } catch (e) {
+          return e.toString();
+        }
       }
     }
   }
