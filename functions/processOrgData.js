@@ -28,6 +28,9 @@ processAll = async function(org, date)
     pipeline.push({ "$match": { "_id": { "$gte": objectIdFromTimestamp(startfrom) }}});
   }
 
+  // Process invoices in date order
+  pipeline.push({ "$sort": { "_id": 1 }});
+
   pipeline.push({ "$lookup": {
     "from": "orgdata",
     "localField": "orgId",
@@ -45,10 +48,6 @@ processAll = async function(org, date)
   if (date instanceof Date) {
     pipeline.push({ "$match": { "date": { "$gt": date }}});
   }
-  
-  // without a sort we're reliant on the data being presented in sorted order
-  // but without spilling to disk this sort stage falls over on the larger result sets
-  // pipeline.push({ "$sort": { "lineItems.startDate": 1 }});
 
   pipeline.push({ "$project": {
     "_id": 0,
