@@ -1,4 +1,5 @@
-
+# DISCLAIMER
+This tool and guide is an open source tool that is not officially supported by MongoDB. The official way to view and review your invoice would be to use the actual Invoice or viewing the invoice in the Atlas UI. 
 
 # MongoDB Atlas Billing Exploration using Charts
 
