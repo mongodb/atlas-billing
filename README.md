@@ -1,4 +1,4 @@
-
+## Please note - Charts now supports a billing dashboard out of the box. Please see [this page](https://www.mongodb.com/docs/charts/billing-dashboards/) for setting it up. The below solution is deprecated and will no longer be supported. 
 
 # MongoDB Atlas Billing Exploration using Charts
 
